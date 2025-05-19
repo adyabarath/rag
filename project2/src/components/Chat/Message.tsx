@@ -24,11 +24,11 @@ const Message: React.FC<MessageProps> = ({ message, isFirstMessage }) => {
         const content = section.split('\n').slice(1).join('\n');
         
         return (
-          <div key={index} className="mb-8">
-            <h1 className="text-2xl font-bold text-[#0A192F] mb-4">
+          <div key={index} className="mb-6">
+            <h1 className="text-2xl font-bold text-[#0A192F] mb-4 pb-2 border-b border-gray-200">
               {headerText}
             </h1>
-            {formatTextWithStyles(content)}
+            <div className="pl-1">{formatTextWithStyles(content)}</div>
           </div>
         );
       } 
@@ -38,17 +38,17 @@ const Message: React.FC<MessageProps> = ({ message, isFirstMessage }) => {
         const content = section.split('\n').slice(1).join('\n');
         
         return (
-          <div key={index} className="mb-6">
-            <h2 className="text-xl font-semibold text-[#0A192F] mb-3">
+          <div key={index} className="mb-4">
+            <h2 className="text-lg font-semibold text-[#0A192F] mb-2">
               {headerText}
             </h2>
-            {formatTextWithStyles(content)}
+            <div className="pl-1">{formatTextWithStyles(content)}</div>
           </div>
         );
       } else {
         // Regular content without header
         return (
-          <div key={index} className="mb-4">
+          <div key={index} className="mb-4 pl-1">
             {formatTextWithStyles(section)}
           </div>
         );
@@ -58,18 +58,18 @@ const Message: React.FC<MessageProps> = ({ message, isFirstMessage }) => {
 
   const formatTextWithStyles = (text: string) => {
     // Split text into parts that need different formatting
-    return text.split(/(\*\*.*?\*\*|\*.*?\*|\$.*?\$|\n- |\n\d+\. )/).map((part, i) => {
+    return text.split(/(\*\*.*?\*\*|\*.*?\*|\$.*?\$|\n• |\n\d+\. )/).map((part, i) => {
       if (part.startsWith('**') && part.endsWith('**')) {
         // Bold text
         return (
-          <strong key={i} className="font-bold">
+          <strong key={i} className="font-semibold text-[#0A192F]">
             {part.slice(2, -2)}
           </strong>
         );
       } else if (part.startsWith('*') && part.endsWith('*')) {
         // Italic text
         return (
-          <em key={i} className="italic">
+          <em key={i} className="text-gray-600">
             {part.slice(1, -1)}
           </em>
         );
@@ -77,27 +77,29 @@ const Message: React.FC<MessageProps> = ({ message, isFirstMessage }) => {
         // LaTeX formula
         const latex = part.slice(1, -1);
         return <InlineMath key={i} math={latex} />;
-      } else if (part.startsWith('\n- ')) {
+      } else if (part.startsWith('\n• ')) {
         // Bullet point
         return (
-          <ul key={i} className="my-2 ml-4">
-            <li className="list-disc">{part.slice(3)}</li>
-          </ul>
+          <div key={i} className="flex items-start space-x-2 my-1">
+            <span className="text-gray-400 mt-1">•</span>
+            <span>{part.slice(3)}</span>
+          </div>
         );
       } else if (/^\n\d+\.\s/.test(part)) {
         // Numbered list
         const match = part.match(/\d+/);
         const number = match ? parseInt(match[0], 10) : 1;
         return (
-          <ol key={i} className="my-2 ml-4" start={number}>
-            <li className="list-decimal">{part.slice(match[0].length + 3)}</li>
-          </ol>
+          <div key={i} className="flex items-start space-x-2 my-1">
+            <span className="text-gray-500 font-medium min-w-[1.5rem]">{number}.</span>
+            <span>{part.slice(match[0].length + 3)}</span>
+          </div>
         );
       } else {
         // Regular text with paragraph breaks
         return part.split('\n\n').map((paragraph, j) => (
           paragraph.trim() && (
-            <p key={`${i}-${j}`} className="mb-2 leading-relaxed">
+            <p key={`${i}-${j}`} className="mb-3 text-gray-700 leading-relaxed">
               {paragraph}
             </p>
           )
@@ -121,13 +123,15 @@ const Message: React.FC<MessageProps> = ({ message, isFirstMessage }) => {
           </div>
           <div 
             className={`
-              p-6 rounded-lg prose prose-sm max-w-none
+              p-6 rounded-lg
               ${isUser 
-                ? 'bg-[#172A46] text-white rounded-tr-none prose-invert' 
-                : 'bg-gray-100 text-gray-800 rounded-tl-none'}
+                ? 'bg-[#172A46] text-white rounded-tr-none' 
+                : 'bg-white shadow-sm border border-gray-200 text-gray-800 rounded-tl-none'}
             `}
           >
-            {formatContent(message.content)}
+            <div className="prose prose-sm max-w-none">
+              {formatContent(message.content)}
+            </div>
           </div>
           <div 
             className={`

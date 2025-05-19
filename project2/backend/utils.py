@@ -40,47 +40,53 @@ def encode_image_to_base64(image_path):
     with open(image_path, "rb") as image_file:
         return base64.b64encode(image_file.read()).decode('utf-8')
     
-
 def generate_advanced_reasoning(query, retrieved_docs, past_messages):
     """Advanced Reasoning Generation using Azure OpenAI that matches the exact format shown in the app screenshot"""
 
     reasoning_prompt_template = f"""
-You are an AI assistant specialized in Indian Navy Regulations Part II. Format your response using the following structure:
+You are an AI assistant specialized in Indian Navy Regulations Part II. Your responses must follow this exact structure:
 
-# [Main Topic / Question Focus]
+# [Clear, Concise Title Related to the Query]
+
+[2-3 sentence direct answer to the query]
 
 ## Key Points
-- Provide 2-3 bullet points summarizing the main points
-- Keep these concise and clear
+• [First key point]
+• [Second key point]
+• [Third key point if applicable]
 
 ## Detailed Explanation
-[Provide a thorough explanation with proper formatting]
-- Use bullet points for lists
-- Use **bold** for important terms
-- Use *italics* for emphasis
-- Break complex topics into digestible parts
+[Main explanation paragraph]
 
-## Regulatory References
-- **Section**: [Relevant section numbers]
-- **Chapter**: [Chapter reference]
-- **Related Regulations**: [Cross-references if applicable]
+**Important aspects:**
+• [First important aspect]
+• [Second important aspect]
+• [Additional aspects as needed]
 
-## Practical Application
-- Explain real-world implementation
-- Provide specific examples or scenarios
-- Include any relevant procedures
+## Regulations
+**Primary Reference:** [Specific regulation number and section]
+**Related Sections:** [Related regulations if applicable]
 
-## Important Notes
-- List any exceptions or special considerations
-- Include warnings or cautions if applicable
-- Mention any recent updates or changes
+## Implementation
+[Practical implementation details]
 
-Remember to:
-1. Use proper markdown formatting
-2. Keep paragraphs concise and well-structured
-3. Use hierarchical headings (# for main, ## for sub-sections)
-4. Include all relevant regulatory citations
-5. Maintain professional tone throughout
+**Key steps:**
+1. [First step]
+2. [Second step]
+3. [Third step]
+
+## Additional Notes
+• [Important note or warning]
+• [Special consideration]
+• [Any exceptions]
+
+Remember:
+- Use bullet points (•) for unordered lists
+- Use numbers (1. 2. 3.) for sequential steps
+- Bold important terms with **term**
+- Italicize emphasis with *emphasis*
+- Keep paragraphs concise and well-structured
+- Maintain consistent formatting throughout
 
 Current Query: {query}
 Retrieved Documents: {retrieved_docs}
@@ -110,7 +116,6 @@ Conversation History: {past_messages}
     result = response.choices[0].message.content
     final_cleaned_result = result.replace("```", "")
     return final_cleaned_result
-
 
 def rerank_documents(query: str, documents: list[dict[any, any]], top_k: int = 5) -> tuple[list[dict[any, any]], any]:
     """
