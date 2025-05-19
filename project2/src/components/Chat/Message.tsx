@@ -15,38 +15,38 @@ const Message: React.FC<MessageProps> = ({ message, isFirstMessage }) => {
     if (isUser) return content;
 
     // Split content into sections based on markdown-style headers
-    const sections = content.split(/(?=##? )/);
+    const sections = content.split(/(?=# |## )/);
     
     return sections.map((section, index) => {
-      // Check if section starts with a header
-      if (section.startsWith('## ')) {
-        // Level 2 header (subsection)
-        const headerText = section.split('\n')[0].replace('## ', '');
-        const content = section.split('\n').slice(1).join('\n');
-        
-        return (
-          <div key={index} className="mb-6">
-            <h3 className="text-xl font-bold text-[#0A192F] mb-3">
-              {headerText}
-            </h3>
-            {formatTextWithStyles(content)}
-          </div>
-        );
-      } else if (section.startsWith('# ')) {
-        // Level 1 header (main section)
+      // Check if section starts with a main header (h1)
+      if (section.startsWith('# ')) {
         const headerText = section.split('\n')[0].replace('# ', '');
         const content = section.split('\n').slice(1).join('\n');
         
         return (
           <div key={index} className="mb-8">
-            <h2 className="text-2xl font-bold text-[#0A192F] mb-4">
+            <h1 className="text-2xl font-bold text-[#0A192F] mb-4">
+              {headerText}
+            </h1>
+            {formatTextWithStyles(content)}
+          </div>
+        );
+      } 
+      // Check if section starts with a subheader (h2)
+      else if (section.startsWith('## ')) {
+        const headerText = section.split('\n')[0].replace('## ', '');
+        const content = section.split('\n').slice(1).join('\n');
+        
+        return (
+          <div key={index} className="mb-6">
+            <h2 className="text-xl font-semibold text-[#0A192F] mb-3">
               {headerText}
             </h2>
             {formatTextWithStyles(content)}
           </div>
         );
       } else {
-        // Regular content
+        // Regular content without header
         return (
           <div key={index} className="mb-4">
             {formatTextWithStyles(section)}
@@ -57,7 +57,7 @@ const Message: React.FC<MessageProps> = ({ message, isFirstMessage }) => {
   };
 
   const formatTextWithStyles = (text: string) => {
-    // Process inline styles and LaTeX
+    // Split text into parts that need different formatting
     return text.split(/(\*\*.*?\*\*|\*.*?\*|\$.*?\$|\n- |\n\d+\. )/).map((part, i) => {
       if (part.startsWith('**') && part.endsWith('**')) {
         // Bold text
@@ -80,24 +80,24 @@ const Message: React.FC<MessageProps> = ({ message, isFirstMessage }) => {
       } else if (part.startsWith('\n- ')) {
         // Bullet point
         return (
-          <ul key={i} className="ml-4 my-2">
+          <ul key={i} className="my-2 ml-4">
             <li className="list-disc">{part.slice(3)}</li>
           </ul>
         );
       } else if (/^\n\d+\.\s/.test(part)) {
+        // Numbered list
         const match = part.match(/\d+/);
-        const number = match ? parseInt(match[0], 10) : 1; // default to 1 if no match
-      
+        const number = match ? parseInt(match[0], 10) : 1;
         return (
-          <ol key={i} className="ml-4 my-2" start={number}>
-            <li className="list-decimal">{part.slice(match[0].length + 3).trim()}</li>
+          <ol key={i} className="my-2 ml-4" start={number}>
+            <li className="list-decimal">{part.slice(match[0].length + 3)}</li>
           </ol>
         );
-      }else {
+      } else {
         // Regular text with paragraph breaks
         return part.split('\n\n').map((paragraph, j) => (
           paragraph.trim() && (
-            <p key={`${i}-${j}`} className="mb-2">
+            <p key={`${i}-${j}`} className="mb-2 leading-relaxed">
               {paragraph}
             </p>
           )
@@ -121,26 +121,24 @@ const Message: React.FC<MessageProps> = ({ message, isFirstMessage }) => {
           </div>
           <div 
             className={`
-              p-4 rounded-lg
+              p-6 rounded-lg prose prose-sm max-w-none
               ${isUser 
-                ? 'bg-[#172A46] text-white rounded-tr-none' 
+                ? 'bg-[#172A46] text-white rounded-tr-none prose-invert' 
                 : 'bg-gray-100 text-gray-800 rounded-tl-none'}
             `}
           >
-            <div className="prose prose-sm max-w-none">
-              {formatContent(message.content)}
-            </div>
-            <div 
-              className={`
-                text-xs mt-3 pt-2 border-t
-                ${isUser ? 'text-gray-300 border-gray-600' : 'text-gray-500 border-gray-200'}
-              `}
-            >
-              {new Date(message.timestamp).toLocaleTimeString([], { 
-                hour: '2-digit', 
-                minute: '2-digit' 
-              })}
-            </div>
+            {formatContent(message.content)}
+          </div>
+          <div 
+            className={`
+              text-xs mt-2
+              ${isUser ? 'text-gray-400' : 'text-gray-500'}
+            `}
+          >
+            {new Date(message.timestamp).toLocaleTimeString([], { 
+              hour: '2-digit', 
+              minute: '2-digit' 
+            })}
           </div>
         </div>
 
