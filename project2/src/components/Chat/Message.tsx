@@ -25,10 +25,10 @@ const Message: React.FC<MessageProps> = ({ message, isFirstMessage }) => {
         
         return (
           <div key={index} className="mb-6">
-            <h1 className="text-2xl font-bold text-[#0A192F] mb-4 pb-2 border-b border-gray-200">
+            <h1 className="text-2xl font-bold text-[#0A192F] mb-4 pb-3 border-b border-gray-200">
               {headerText}
             </h1>
-            <div className="pl-1">{formatTextWithStyles(content)}</div>
+            <div className="space-y-4">{formatTextWithStyles(content)}</div>
           </div>
         );
       } 
@@ -38,17 +38,17 @@ const Message: React.FC<MessageProps> = ({ message, isFirstMessage }) => {
         const content = section.split('\n').slice(1).join('\n');
         
         return (
-          <div key={index} className="mb-4">
-            <h2 className="text-lg font-semibold text-[#0A192F] mb-2">
+          <div key={index} className="mb-6">
+            <h2 className="text-xl font-semibold text-[#0A192F] mb-3">
               {headerText}
             </h2>
-            <div className="pl-1">{formatTextWithStyles(content)}</div>
+            <div className="space-y-2">{formatTextWithStyles(content)}</div>
           </div>
         );
       } else {
         // Regular content without header
         return (
-          <div key={index} className="mb-4 pl-1">
+          <div key={index} className="mb-4">
             {formatTextWithStyles(section)}
           </div>
         );
@@ -80,9 +80,9 @@ const Message: React.FC<MessageProps> = ({ message, isFirstMessage }) => {
       } else if (part.startsWith('\n• ')) {
         // Bullet point
         return (
-          <div key={i} className="flex items-start space-x-2 my-1">
+          <div key={i} className="flex items-start gap-2 py-0.5">
             <span className="text-gray-400 mt-1">•</span>
-            <span>{part.slice(3)}</span>
+            <span className="flex-1">{part.slice(3)}</span>
           </div>
         );
       } else if (/^\n\d+\.\s/.test(part)) {
@@ -90,16 +90,16 @@ const Message: React.FC<MessageProps> = ({ message, isFirstMessage }) => {
         const match = part.match(/\d+/);
         const number = match ? parseInt(match[0], 10) : 1;
         return (
-          <div key={i} className="flex items-start space-x-2 my-1">
-            <span className="text-gray-500 font-medium min-w-[1.5rem]">{number}.</span>
-            <span>{part.slice(match[0].length + 3)}</span>
+          <div key={i} className="flex items-start gap-3 py-0.5">
+            <span className="text-gray-600 font-medium min-w-[1.25rem]">{number}.</span>
+            <span className="flex-1">{part.slice(match[0].length + 3)}</span>
           </div>
         );
       } else {
         // Regular text with paragraph breaks
         return part.split('\n\n').map((paragraph, j) => (
           paragraph.trim() && (
-            <p key={`${i}-${j}`} className="mb-3 text-gray-700 leading-relaxed">
+            <p key={`${i}-${j}`} className="text-gray-700 leading-relaxed">
               {paragraph}
             </p>
           )

@@ -44,61 +44,61 @@ def generate_advanced_reasoning(query, retrieved_docs, past_messages):
     """Advanced Reasoning Generation using Azure OpenAI that matches the exact format shown in the app screenshot"""
 
     reasoning_prompt_template = f"""
-You are an AI assistant specialized in Indian Navy Regulations Part II. Your responses must follow this exact structure:
+You are an AI assistant specialized in Indian Navy Regulations Part II. Format your response exactly as follows:
 
-# [Clear, Concise Title Related to the Query]
+# [Title: Clear and Relevant to Query]
 
-[2-3 sentence direct answer to the query]
+[2-3 sentence direct answer without any bullet points]
 
 ## Key Points
-• [First key point]
-• [Second key point]
-• [Third key point if applicable]
+• [First key point - single line]
+• [Second key point - single line]
+• [Third key point - single line]
 
 ## Detailed Explanation
-[Main explanation paragraph]
+[Single paragraph explanation of the main concept]
 
 **Important aspects:**
 • [First important aspect]
 • [Second important aspect]
-• [Additional aspects as needed]
+• [Third important aspect if needed]
 
-## Regulations
-**Primary Reference:** [Specific regulation number and section]
-**Related Sections:** [Related regulations if applicable]
+## Regulatory References
+**Primary Section:** [Specific section number]
+**Chapter:** [Chapter name]
+**Related Sections:** [List related sections]
 
 ## Implementation
-[Practical implementation details]
+[Single paragraph about practical implementation]
 
 **Key steps:**
-1. [First step]
-2. [Second step]
-3. [Third step]
+1. [First implementation step]
+2. [Second implementation step]
+3. [Third implementation step]
 
 ## Additional Notes
-• [Important note or warning]
-• [Special consideration]
-• [Any exceptions]
+• [Important consideration]
+• [Special circumstance]
+• [Any exception or warning]
 
-Remember:
-- Use bullet points (•) for unordered lists
-- Use numbers (1. 2. 3.) for sequential steps
-- Bold important terms with **term**
-- Italicize emphasis with *emphasis*
-- Keep paragraphs concise and well-structured
-- Maintain consistent formatting throughout
+Formatting Rules:
+1. Use "•" for bullet points
+2. Use numbers for sequential steps
+3. Use **bold** for emphasis
+4. Keep paragraphs short and focused
+5. Maintain consistent spacing
+6. No extra line breaks between sections
 
-Current Query: {query}
+Query: {query}
 Retrieved Documents: {retrieved_docs}
 Conversation History: {past_messages}
 """
 
-    # Build full message history including system prompt and prior chat
     full_messages = [
         {
             "role": "system",
             "content": """You are an advanced AI assistant specializing in Indian Navy Regulations Part II. 
-            Provide clear, structured responses using proper markdown formatting. Focus on accuracy and clarity."""
+            Provide clear, structured responses with consistent formatting and precise information."""
         }
     ]
 
