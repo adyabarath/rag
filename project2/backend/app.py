@@ -18,20 +18,6 @@ from utils import get_text_embedding, rerank_documents, generate_advanced_reason
 STORAGE_PATH = r"D:\project-bolt-sb1-zlzgvffc\project2\backend\lancedb"
 load_dotenv()
 app = Flask(__name__)
-CORS(app, supports_credentials=True)
-app.config['MONGO_URI'] = 'mongodb://localhost:27017/navy'
-mongo = PyMongo(app)
-AZURE_API_KEY = "c18c9011aa0746d78cd93f07da587452"
-AZURE_ENDPOINT = "https://gpt4o-adya.openai.azure.com/"
-API_VERSION = "2024-02-01"
-
-# Initialize Azure OpenAI Client
-client = AzureOpenAI(
-    api_key=AZURE_API_KEY,
-    api_version=API_VERSION,
-    azure_endpoint=AZURE_ENDPOINT
-)
-
 
 def format_session(session):
     """Format session document for JSON response"""
