@@ -2,16 +2,7 @@ from openai import AzureOpenAI
 import lancedb
 import cohere
 import base64
-AZURE_API_KEY = "c18c9011aa0746d78cd93f07da587452"
-AZURE_ENDPOINT = "https://gpt4o-adya.openai.azure.com/"
-API_VERSION = "2024-02-01"
 
-# Initialize Azure OpenAI Client
-client = AzureOpenAI(
-    api_key=AZURE_API_KEY,
-    api_version=API_VERSION,
-    azure_endpoint=AZURE_ENDPOINT
-)
 
 def get_text_embedding(text):
     """
